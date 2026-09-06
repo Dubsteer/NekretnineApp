@@ -1,0 +1,27 @@
+@model NekretnineApp.Models.ViewModels.ReportsViewModel
+@{
+    ViewData["Title"] = "Izvještaji";
+}
+
+<div class="mb-4"><h1 class="page-title mb-1">Izvještaji</h1><p class="text-muted mb-0">Osnovna statistika prihvaćenih obilazaka i aktivnosti sistema.</p></div>
+
+<div class="row g-4">
+    <div class="col-lg-6">
+        <div class="card shadow-sm border-0 h-100"><div class="card-header bg-white py-3"><h2 class="h5 mb-0">Prihvaćeni obilasci po gradu</h2></div><div class="card-body">
+            @if (Model.ByCity.Count == 0) { <p class="text-muted mb-0">Nema podataka.</p> }
+            else { <table class="table"><thead><tr><th>Grad</th><th class="text-end">Broj</th></tr></thead><tbody>@foreach (var item in Model.ByCity) { <tr><td>@item.City</td><td class="text-end">@item.Count</td></tr> }</tbody></table> }
+        </div></div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card shadow-sm border-0 h-100"><div class="card-header bg-white py-3"><h2 class="h5 mb-0">Najtraženije nekretnine</h2></div><div class="card-body">
+            @if (Model.ByProperty.Count == 0) { <p class="text-muted mb-0">Nema podataka.</p> }
+            else { <table class="table"><thead><tr><th>Nekretnina</th><th class="text-end">Broj</th></tr></thead><tbody>@foreach (var item in Model.ByProperty) { <tr><td>@item.PropertyTitle</td><td class="text-end">@item.Count</td></tr> }</tbody></table> }
+        </div></div>
+    </div>
+    <div class="col-12">
+        <div class="card shadow-sm border-0"><div class="card-header bg-white py-3"><h2 class="h5 mb-0">Zahtjevi po mjesecu</h2></div><div class="card-body">
+            @if (Model.ByMonth.Count == 0) { <p class="text-muted mb-0">Nema podataka.</p> }
+            else { <table class="table"><thead><tr><th>Mjesec</th><th class="text-end">Broj zahtjeva</th></tr></thead><tbody>@foreach (var item in Model.ByMonth) { <tr><td>@item.Month</td><td class="text-end">@item.Count</td></tr> }</tbody></table> }
+        </div></div>
+    </div>
+</div>

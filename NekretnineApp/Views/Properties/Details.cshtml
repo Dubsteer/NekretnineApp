@@ -1,0 +1,86 @@
+@model NekretnineApp.Models.Property
+@using NekretnineApp.Models
+@{
+    ViewData["Title"] = Model.Title;
+    var images = Model.Images.OrderByDescending(i => i.IsPrimary).ToList();
+}
+
+<div class="mb-3"><a asp-action="Index" class="text-decoration-none">← Nazad na ponudu</a></div>
+
+<div class="row g-4">
+    <div class="col-lg-7">
+        @if (images.Count > 1)
+        {
+            <div id="propertyCarousel" class="carousel slide property-gallery shadow-sm" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    @for (var i = 0; i < images.Count; i++)
+                    {
+                        <div class="carousel-item @(i == 0 ? "active" : "")">
+                            <img src="@images[i].ImagePath" class="d-block w-100" alt="Fotografija nekretnine" />
+                        </div>
+                    }
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#propertyCarousel" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span></button>
+                <button class="carousel-control-next" type="button" data-bs-target="#propertyCarousel" data-bs-slide="next"><span class="carousel-control-next-icon"></span></button>
+            </div>
+        }
+        else
+        {
+            <div class="property-gallery shadow-sm">
+                <img src="@(images.FirstOrDefault()?.ImagePath ?? "/images/property-placeholder.svg")" class="w-100" alt="@Model.Title" />
+            </div>
+        }
+    </div>
+
+    <div class="col-lg-5">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body p-4">
+                <div class="d-flex flex-wrap gap-2 mb-3">
+                    <span class="badge bg-primary">@Model.Category?.Name</span>
+                    <span class="badge bg-success">@Model.Purpose</span>
+                    <span class="badge @(Model.IsActive ? "bg-info text-dark" : "bg-secondary")">@(Model.IsActive ? "Aktivan oglas" : "Neaktivan oglas")</span>
+                </div>
+                <h1 class="h2 mb-3">@Model.Title</h1>
+                <div class="display-6 fw-bold text-primary mb-4">@Model.Price.ToString("N2") €</div>
+
+                <dl class="row property-details-list">
+                    <dt class="col-5">Grad</dt><dd class="col-7">@Model.City</dd>
+                    <dt class="col-5">Adresa</dt><dd class="col-7">@Model.Address</dd>
+                    <dt class="col-5">Površina</dt><dd class="col-7">@Model.Area.ToString("0.##") m²</dd>
+                    <dt class="col-5">Namjena</dt><dd class="col-7">@Model.Purpose</dd>
+                </dl>
+
+                @if (User.IsInRole(RoleNames.User) && Model.IsActive)
+                {
+                    <a asp-controller="Reservations" asp-action="Create" asp-route-propertyId="@Model.Id" class="btn btn-primary btn-lg w-100 mt-2">Zakaži obilazak</a>
+                }
+                else if (User.Identity?.IsAuthenticated != true)
+                {
+                    <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-primary w-100 mt-2">Prijavite se za zakazivanje</a>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mt-1">
+    <div class="col-lg-8">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4">
+                <h2 class="h4">Opis nekretnine</h2>
+                <p class="mb-0 text-preline">@Model.Description</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4">
+                <h2 class="h5">Oglašivač</h2>
+                <p class="fw-semibold mb-1">@(Model.Owner?.CompanyName ?? Model.Owner?.FullName ?? "Nije navedeno")</p>
+                <p class="mb-1">@Model.Owner?.FullName</p>
+                <p class="mb-1"><a href="mailto:@Model.Owner?.Email">@Model.Owner?.Email</a></p>
+                <p class="mb-0">@Model.Owner?.PhoneNumber</p>
+            </div>
+        </div>
+    </div>
+</div>

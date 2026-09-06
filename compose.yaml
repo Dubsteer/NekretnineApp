@@ -1,0 +1,21 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: NekretnineApp/Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Production}
+      ConnectionStrings__DefaultConnection: Data Source=/app/data/nekretnine.db
+      DataProtection__KeysPath: /app/data/keys
+      DemoSeed__Enabled: ${DEMO_SEED_ENABLED:-false}
+      DemoSeed__Password: ${DEMO_SEED_PASSWORD:-}
+    volumes:
+      - app-data:/app/data
+      - uploaded-images:/app/wwwroot/uploads
+    restart: unless-stopped
+
+volumes:
+  app-data:
+  uploaded-images:

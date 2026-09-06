@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up .NET 8
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore
+        run: dotnet restore NekretnineApp.sln
+
+      - name: Build
+        run: dotnet build NekretnineApp.sln --configuration Release --no-restore
+
+      - name: Test
+        run: dotnet test NekretnineApp.sln --configuration Release --no-build --no-restore
+
+      - name: Publish
+        run: dotnet publish NekretnineApp/NekretnineApp.csproj --configuration Release --no-build --no-restore --output artifacts/publish
+
+  container:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Build container image
+        run: docker build --file NekretnineApp/Dockerfile --tag nekretnine-app:ci .

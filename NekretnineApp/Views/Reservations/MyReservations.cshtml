@@ -1,0 +1,51 @@
+@model List<NekretnineApp.Models.Reservation>
+@using NekretnineApp.Models
+@{
+    ViewData["Title"] = "Moji obilasci";
+}
+
+<div class="mb-4">
+    <h1 class="page-title mb-1">Moji zahtjevi za obilazak</h1>
+    <p class="text-muted mb-0">Pratite termine i status zahtjeva koje ste poslali.</p>
+</div>
+
+@if (Model.Count == 0)
+{
+    <div class="empty-state"><h3>Nijeste poslali nijedan zahtjev</h3><p class="text-muted">Otvorite detalje aktivne nekretnine i izaberite „Zakaži obilazak“.</p><a asp-controller="Properties" asp-action="Index" class="btn btn-primary">Pregled ponude</a></div>
+}
+else
+{
+    <div class="card shadow-sm border-0">
+        <div class="table-responsive">
+            <table class="table align-middle mb-0">
+                <thead><tr><th>Nekretnina</th><th>Termin</th><th>Status</th><th>Napomena</th><th class="text-end">Radnje</th></tr></thead>
+                <tbody>
+                @foreach (var item in Model)
+                {
+                    var statusClass = item.Status switch
+                    {
+                        ReservationStatus.Approved => "bg-success",
+                        ReservationStatus.Rejected => "bg-danger",
+                        ReservationStatus.Cancelled => "bg-secondary",
+                        _ => "bg-warning text-dark"
+                    };
+                    <tr>
+                        <td><a asp-controller="Properties" asp-action="Details" asp-route-id="@item.PropertyId" class="fw-semibold text-decoration-none">@item.Property?.Title</a><div class="small text-muted">@item.Property?.City</div></td>
+                        <td>@item.AppointmentDateTime.ToString("dd.MM.yyyy. HH:mm")</td>
+                        <td><span class="badge @statusClass">@item.Status.DisplayName()</span></td>
+                        <td class="small">@(string.IsNullOrWhiteSpace(item.Note) ? "—" : item.Note)</td>
+                        <td class="text-end">
+                            @if ((item.Status == ReservationStatus.Pending || item.Status == ReservationStatus.Approved) && item.AppointmentDateTime > DateTime.Now)
+                            {
+                                <form asp-action="Cancel" asp-route-id="@item.Id" method="post" class="d-inline" onsubmit="return confirm('Da li želite da otkažete zahtjev?');">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">Otkaži</button>
+                                </form>
+                            }
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}

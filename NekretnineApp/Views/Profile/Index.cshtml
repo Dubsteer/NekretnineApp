@@ -1,0 +1,6 @@
+@model NekretnineApp.Models.ViewModels.ProfileViewModel
+@using NekretnineApp.Models
+@{
+    ViewData["Title"] = "Moj profil";
+}
+<div class="row justify-content-center"><div class="col-lg-8"><div class="card shadow-sm border-0"><div class="card-body p-4 p-lg-5"><div class="d-flex justify-content-between align-items-start gap-3 mb-4"><div><h1 class="h2 mb-1">Moj profil</h1><p class="text-muted mb-0">Podaci povezani sa korisničkim nalogom.</p></div><a asp-action="Edit" class="btn btn-primary">Izmijeni profil</a></div><dl class="row profile-list"><dt class="col-sm-4">Vrsta naloga</dt><dd class="col-sm-8"><span class="badge bg-primary">@RoleNames.DisplayName(Model.Role)</span></dd><dt class="col-sm-4">Ime i prezime / naziv</dt><dd class="col-sm-8">@Model.FullName</dd><dt class="col-sm-4">Naziv firme</dt><dd class="col-sm-8">@(Model.CompanyName ?? "—")</dd><dt class="col-sm-4">Email</dt><dd class="col-sm-8">@Model.Email</dd><dt class="col-sm-4">Telefon</dt><dd class="col-sm-8">@Model.PhoneNumber</dd><dt class="col-sm-4">Adresa</dt><dd class="col-sm-8">@(Model.Address ?? "—")</dd></dl></div></div></div></div>

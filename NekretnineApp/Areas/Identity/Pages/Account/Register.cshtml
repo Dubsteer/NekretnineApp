@@ -1,0 +1,89 @@
+@page
+@model RegisterModel
+@using NekretnineApp.Models
+@{
+    ViewData["Title"] = "Registracija";
+}
+
+<section class="auth-page" aria-labelledby="register-title">
+    <div class="auth-card auth-card-wide">
+        <a class="auth-back-link" asp-area="" asp-controller="Properties" asp-action="Index">
+            <span aria-hidden="true">←</span> Nazad na oglase
+        </a>
+
+        <div class="auth-heading">
+            <span class="auth-eyebrow">Novi nalog</span>
+            <h1 id="register-title">Registrujte se</h1>
+            <p>Izaberite da li želite da pregledate ponudu ili da objavljujete oglase.</p>
+        </div>
+
+        <form method="post" asp-route-returnUrl="@Model.ReturnUrl" class="auth-form">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger auth-validation" role="alert"></div>
+
+            <div class="mb-3">
+                <label asp-for="Input.AccountType" class="form-label"></label>
+                <select asp-for="Input.AccountType" class="form-select auth-input">
+                    <option value="@RoleNames.User">Korisnik — pregled i zakazivanje obilaska</option>
+                    <option value="@RoleNames.Advertiser">Oglašivač — objavljivanje nekretnina</option>
+                </select>
+                <span asp-validation-for="Input.AccountType" class="text-danger small"></span>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Input.FullName" class="form-label"></label>
+                    <input asp-for="Input.FullName" class="form-control auth-input" autocomplete="name" />
+                    <span asp-validation-for="Input.FullName" class="text-danger small"></span>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Input.CompanyName" class="form-label"></label>
+                    <input asp-for="Input.CompanyName" class="form-control auth-input" />
+                    <span asp-validation-for="Input.CompanyName" class="text-danger small"></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Input.PhoneNumber" class="form-label"></label>
+                    <input asp-for="Input.PhoneNumber" class="form-control auth-input" autocomplete="tel" />
+                    <span asp-validation-for="Input.PhoneNumber" class="text-danger small"></span>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Input.Address" class="form-label"></label>
+                    <input asp-for="Input.Address" class="form-control auth-input" autocomplete="street-address" />
+                    <span asp-validation-for="Input.Address" class="text-danger small"></span>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Input.Email" class="form-label"></label>
+                <input asp-for="Input.Email" class="form-control auth-input" autocomplete="username" placeholder="ime@primjer.com" />
+                <span asp-validation-for="Input.Email" class="text-danger small"></span>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Input.Password" class="form-label"></label>
+                    <input asp-for="Input.Password" class="form-control auth-input" autocomplete="new-password" />
+                    <span asp-validation-for="Input.Password" class="text-danger small"></span>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Input.ConfirmPassword" class="form-label"></label>
+                    <input asp-for="Input.ConfirmPassword" class="form-control auth-input" autocomplete="new-password" />
+                    <span asp-validation-for="Input.ConfirmPassword" class="text-danger small"></span>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary auth-submit">Registruj se</button>
+        </form>
+
+        <div class="auth-footer-link">
+            <span>Već imate nalog?</span>
+            <a asp-page="./Login" asp-route-returnUrl="@Model.ReturnUrl">Prijavite se</a>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

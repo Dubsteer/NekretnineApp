@@ -1,0 +1,85 @@
+@using NekretnineApp.Models
+<!DOCTYPE html>
+<html lang="sr-Latn">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-xl navbar-dark site-navbar shadow-sm">
+            <div class="container">
+                <a class="navbar-home" asp-area="" asp-controller="Properties" asp-action="Index" aria-label="Početna stranica" title="Početna">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5v8a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-8Z" /></svg>
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Otvori navigaciju">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="mainNav">
+                    <ul class="navbar-nav me-auto mb-2 mb-xl-0">
+                        <li class="nav-item"><a class="nav-link" asp-controller="Properties" asp-action="Index">Sve nekretnine</a></li>
+
+                        @if (User.IsInRole(RoleNames.Advertiser) || User.IsInRole(RoleNames.Admin))
+                        {
+                            <li class="nav-item"><a class="nav-link" asp-controller="Properties" asp-action="Create">Dodaj oglas</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Properties" asp-action="MyProperties">@(User.IsInRole(RoleNames.Admin) ? "Svi oglasi" : "Moji oglasi")</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Reservations" asp-action="Requests">Zahtjevi za obilazak</a></li>
+                        }
+
+                        @if (User.IsInRole(RoleNames.User))
+                        {
+                            <li class="nav-item"><a class="nav-link" asp-controller="Reservations" asp-action="MyReservations">Moji obilasci</a></li>
+                        }
+
+                        @if (User.IsInRole(RoleNames.Admin))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Administracija</a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" asp-controller="Admin" asp-action="Index">Kontrolna tabla</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Admin" asp-action="Users">Korisnički nalozi</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Categories" asp-action="Index">Kategorije</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Admin" asp-action="Reports">Izvještaji</a></li>
+                                </ul>
+                            </li>
+                        }
+                    </ul>
+                    <partial name="_LoginPartial" />
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container py-4 site-main">
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                @TempData["Success"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Zatvori"></button>
+            </div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                @TempData["Error"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Zatvori"></button>
+            </div>
+        }
+
+        @RenderBody()
+    </main>
+
+    <footer class="site-footer py-3 mt-5">
+        <div class="container text-center small">© 2026 Vladimir Stijepovic</div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

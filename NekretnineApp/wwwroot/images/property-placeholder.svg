@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-label="Nekretnina">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#dbeafe"/>
+      <stop offset="1" stop-color="#e2e8f0"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#bg)"/>
+  <circle cx="980" cy="150" r="70" fill="#bfdbfe"/>
+  <path d="M190 470 600 170l410 300v230H190Z" fill="#fff" stroke="#2563eb" stroke-width="22" stroke-linejoin="round"/>
+  <path d="M490 700V470h220v230" fill="#dbeafe" stroke="#2563eb" stroke-width="22"/>
+  <rect x="280" y="460" width="130" height="120" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="18"/>
+  <rect x="790" y="460" width="130" height="120" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="18"/>
+  <text x="600" y="755" text-anchor="middle" font-family="Arial, sans-serif" font-size="42" fill="#334155">Fotografija nekretnine</text>
+</svg>

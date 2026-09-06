@@ -1,0 +1,50 @@
+@model NekretnineApp.Models.ViewModels.PropertyFormViewModel
+@{
+    ViewData["Title"] = "Izmijeni oglas";
+}
+
+<div class="row justify-content-center">
+    <div class="col-xl-9">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4 p-lg-5">
+                <h1 class="h2 mb-1">Izmijeni oglas</h1>
+                <p class="text-muted mb-4">Ažurirajte podatke ili fotografije nekretnine.</p>
+
+                <form asp-action="Edit" asp-route-id="@Model.Id" method="post" enctype="multipart/form-data">
+                    <input asp-for="Id" type="hidden" />
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                    <partial name="_PropertyForm" model="Model" />
+
+                    @if (Model.ExistingImages.Count > 0)
+                    {
+                        <div class="mt-4">
+                            <label class="form-label fw-semibold">Postojeće fotografije</label>
+                            <p class="small text-muted">Označite fotografije koje želite da uklonite.</p>
+                            <div class="row g-3">
+                                @foreach (var image in Model.ExistingImages)
+                                {
+                                    <div class="col-md-4">
+                                        <label class="existing-photo-card">
+                                            <img src="@image.ImagePath" alt="Fotografija oglasa" />
+                                            <span class="form-check mt-2">
+                                                <input class="form-check-input" type="checkbox" name="RemoveImageIds" value="@image.Id" />
+                                                <span class="form-check-label">Ukloni</span>
+                                            </span>
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+
+                    <div class="d-flex gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary">Sačuvaj izmjene</button>
+                        <a asp-action="MyProperties" class="btn btn-outline-secondary">Odustani</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

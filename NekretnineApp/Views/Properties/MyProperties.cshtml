@@ -1,0 +1,49 @@
+@model List<NekretnineApp.Models.Property>
+@using NekretnineApp.Models
+@{
+    ViewData["Title"] = User.IsInRole(RoleNames.Admin) ? "Svi oglasi" : "Moji oglasi";
+}
+
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+    <div>
+        <h1 class="page-title mb-1">@ViewData["Title"]</h1>
+        <p class="text-muted mb-0">Upravljajte aktivnim i arhiviranim oglasima.</p>
+    </div>
+    <a asp-action="Create" class="btn btn-primary">Dodaj oglas</a>
+</div>
+
+@if (Model.Count == 0)
+{
+    <div class="empty-state"><h3>Još nema oglasa</h3><p class="text-muted">Dodajte prvu nekretninu.</p></div>
+}
+else
+{
+    <div class="card shadow-sm border-0">
+        <div class="table-responsive">
+            <table class="table align-middle mb-0">
+                <thead><tr><th>Oglas</th><th>Tip</th><th>Lokacija</th><th>Cijena</th><th>Status</th><th class="text-end">Radnje</th></tr></thead>
+                <tbody>
+                @foreach (var item in Model)
+                {
+                    var image = item.Images.FirstOrDefault(i => i.IsPrimary) ?? item.Images.FirstOrDefault();
+                    <tr>
+                        <td><div class="d-flex align-items-center gap-3"><img src="@(image?.ImagePath ?? "/images/property-placeholder.svg")" class="table-property-image" alt="" /><div><strong>@item.Title</strong><div class="small text-muted">@item.Area.ToString("0.##") m² · @item.Purpose</div></div></div></td>
+                        <td>@item.Category?.Name</td>
+                        <td>@item.City</td>
+                        <td>@item.Price.ToString("N2") €</td>
+                        <td><span class="badge @(item.IsActive ? "bg-success" : "bg-secondary")">@(item.IsActive ? "Aktivan" : "Neaktivan")</span></td>
+                        <td class="text-end text-nowrap">
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">Detalji</a>
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary">Izmijeni</a>
+                            <form asp-action="ToggleStatus" asp-route-id="@item.Id" method="post" class="d-inline">
+                                <button class="btn btn-sm btn-outline-warning" type="submit">@(item.IsActive ? "Deaktiviraj" : "Aktiviraj")</button>
+                            </form>
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger">Obriši</a>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}

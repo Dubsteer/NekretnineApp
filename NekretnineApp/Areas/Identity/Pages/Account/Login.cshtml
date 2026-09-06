@@ -1,0 +1,57 @@
+@page
+@model LoginModel
+@{
+    ViewData["Title"] = "Prijava";
+}
+
+<section class="auth-page" aria-labelledby="login-title">
+    <div class="auth-card">
+        <a class="auth-back-link" asp-area="" asp-controller="Properties" asp-action="Index">
+            <span aria-hidden="true">←</span> Nazad na oglase
+        </a>
+
+        <div class="auth-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" role="img">
+                <path d="M3 11.5 12 4l9 7.5v8a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-8Z" />
+            </svg>
+        </div>
+
+        <div class="auth-heading">
+            <span class="auth-eyebrow">Dobro došli</span>
+            <h1 id="login-title">Prijavite se</h1>
+            <p>Pristupite oglasima, profilu i zahtjevima za obilazak.</p>
+        </div>
+
+        <form method="post" asp-route-returnUrl="@Model.ReturnUrl" class="auth-form">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger auth-validation" role="alert"></div>
+
+            <div class="mb-3">
+                <label asp-for="Input.Email" class="form-label"></label>
+                <input asp-for="Input.Email" class="form-control auth-input" autocomplete="username" placeholder="ime@primjer.com" autofocus />
+                <span asp-validation-for="Input.Email" class="text-danger small"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Input.Password" class="form-label"></label>
+                <input asp-for="Input.Password" class="form-control auth-input" autocomplete="current-password" placeholder="Unesite lozinku" />
+                <span asp-validation-for="Input.Password" class="text-danger small"></span>
+            </div>
+
+            <div class="form-check auth-remember">
+                <input asp-for="Input.RememberMe" class="form-check-input" />
+                <label asp-for="Input.RememberMe" class="form-check-label"></label>
+            </div>
+
+            <button type="submit" class="btn btn-primary auth-submit">Prijavi se</button>
+        </form>
+
+        <div class="auth-footer-link">
+            <span>Nemate nalog?</span>
+            <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Registrujte se</a>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

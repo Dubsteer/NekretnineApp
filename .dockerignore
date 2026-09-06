@@ -1,0 +1,13 @@
+.git
+.github
+.vs
+**/bin
+**/obj
+**/TestResults
+**/*.db
+**/*.db-shm
+**/*.db-wal
+**/.data-protection-keys
+NekretnineApp/wwwroot/uploads
+*.user
+*.suo

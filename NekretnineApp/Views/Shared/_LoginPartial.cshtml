@@ -1,0 +1,22 @@
+@using Microsoft.AspNetCore.Identity
+@using NekretnineApp.Models
+@inject SignInManager<ApplicationUser> SignInManager
+
+<ul class="navbar-nav align-items-xl-center auth-nav">
+@if (SignInManager.IsSignedIn(User))
+{
+    <li class="nav-item">
+        <a class="nav-link account-link" asp-controller="Profile" asp-action="Index" title="Moj profil">@User.Identity?.Name</a>
+    </li>
+    <li class="nav-item ms-xl-2">
+        <form class="d-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Properties", new { area = "" })">
+            <button type="submit" class="btn btn-outline-light btn-sm nav-action-button">Odjava</button>
+        </form>
+    </li>
+}
+else
+{
+    <li class="nav-item"><a class="nav-link" asp-area="Identity" asp-page="/Account/Register">Registracija</a></li>
+    <li class="nav-item ms-xl-2"><a class="btn btn-light btn-sm nav-action-button" asp-area="Identity" asp-page="/Account/Login">Prijava</a></li>
+}
+</ul>

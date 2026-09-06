@@ -1,0 +1,20 @@
+@model ErrorViewModel
+@{
+    ViewData["Title"] = "Greška";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4 p-lg-5 text-center">
+                <h1 class="h2 text-danger mb-3">Došlo je do greške</h1>
+                <p class="text-muted mb-4">Zahtjev trenutno nije moguće obraditi. Vratite se na početnu stranicu i pokušajte ponovo.</p>
+                @if (Model.ShowRequestId)
+                {
+                    <p class="small text-muted">Oznaka zahtjeva: <code>@Model.RequestId</code></p>
+                }
+                <a asp-controller="Properties" asp-action="Index" class="btn btn-primary">Nazad na oglase</a>
+            </div>
+        </div>
+    </div>
+</div>

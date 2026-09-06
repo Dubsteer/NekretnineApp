@@ -1,0 +1,117 @@
+@model NekretnineApp.Models.ViewModels.PropertyIndexViewModel
+@using NekretnineApp.Models
+@{
+    ViewData["Title"] = "Nekretnine";
+}
+
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+    <div>
+        <h1 class="page-title mb-1">Ponuda nekretnina</h1>
+        <p class="text-muted mb-0">Pretražite oglase za prodaju i izdavanje.</p>
+    </div>
+    @if (User.IsInRole(RoleNames.Advertiser) || User.IsInRole(RoleNames.Admin))
+    {
+        <a asp-action="Create" class="btn btn-primary">Dodaj novi oglas</a>
+    }
+</div>
+
+<div class="card filter-card shadow-sm mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-lg-4 col-md-6">
+                <label class="form-label">Pretraga</label>
+                <input name="Search" value="@Model.Filter.Search" class="form-control" placeholder="Naziv ili opis" />
+            </div>
+            <div class="col-lg-2 col-md-6">
+                <label class="form-label">Tip</label>
+                <select name="CategoryId" class="form-select">
+                    <option value="">Svi tipovi</option>
+                    @foreach (var category in Model.Categories)
+                    {
+                        <option value="@category.Id" selected="@(Model.Filter.CategoryId == category.Id ? "selected" : null)">@category.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="col-lg-2 col-md-6">
+                <label class="form-label">Namjena</label>
+                <select name="Purpose" class="form-select">
+                    <option value="">Sve</option>
+                    <option value="Prodaja" selected="@(Model.Filter.Purpose == "Prodaja" ? "selected" : null)">Prodaja</option>
+                    <option value="Izdavanje" selected="@(Model.Filter.Purpose == "Izdavanje" ? "selected" : null)">Izdavanje</option>
+                </select>
+            </div>
+            <div class="col-lg-2 col-md-6">
+                <label class="form-label">Grad</label>
+                <select name="City" class="form-select">
+                    <option value="">Svi gradovi</option>
+                    @foreach (var city in Model.Cities)
+                    {
+                        <option value="@city" selected="@(Model.Filter.City == city ? "selected" : null)">@city</option>
+                    }
+                </select>
+            </div>
+            <div class="col-lg-2 col-md-6">
+                <label class="form-label">Min. cijena</label>
+                <input name="MinPrice" value="@Model.Filter.MinPrice" type="number" step="0.01" min="0" class="form-control" />
+            </div>
+            <div class="col-lg-2 col-md-6">
+                <label class="form-label">Maks. cijena</label>
+                <input name="MaxPrice" value="@Model.Filter.MaxPrice" type="number" step="0.01" min="0" class="form-control" />
+            </div>
+            <div class="col-lg-2 col-md-6">
+                <label class="form-label">Min. površina</label>
+                <input name="MinArea" value="@Model.Filter.MinArea" type="number" step="0.1" min="0" class="form-control" />
+            </div>
+            <div class="col-lg-2 col-md-6">
+                <label class="form-label">Maks. površina</label>
+                <input name="MaxArea" value="@Model.Filter.MaxArea" type="number" step="0.1" min="0" class="form-control" />
+            </div>
+            <div class="col-lg-4 d-flex align-items-end gap-2">
+                <button class="btn btn-primary flex-grow-1" type="submit">Primijeni filtere</button>
+                <a asp-action="Index" class="btn btn-outline-secondary">Poništi</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@if (Model.Properties.Count == 0)
+{
+    <div class="empty-state">
+        <h3>Nema pronađenih oglasa</h3>
+        <p class="text-muted mb-0">Promijenite kriterijume pretrage i pokušajte ponovo.</p>
+    </div>
+}
+else
+{
+    <div class="row g-4">
+        @foreach (var item in Model.Properties)
+        {
+            var primaryImage = item.Images.FirstOrDefault(i => i.IsPrimary) ?? item.Images.FirstOrDefault();
+            <div class="col-xl-4 col-md-6">
+                <article class="card property-card h-100 shadow-sm border-0">
+                    <a asp-action="Details" asp-route-id="@item.Id" class="property-image-wrap">
+                        <img src="@(primaryImage?.ImagePath ?? "/images/property-placeholder.svg")" alt="@item.Title" class="property-image" />
+                        <span class="badge purpose-badge">@item.Purpose</span>
+                        @if (!item.IsActive)
+                        {
+                            <span class="badge bg-secondary inactive-badge">Neaktivan</span>
+                        }
+                    </a>
+                    <div class="card-body d-flex flex-column">
+                        <div class="small text-primary fw-semibold mb-2">@item.Category?.Name</div>
+                        <h3 class="h5"><a asp-action="Details" asp-route-id="@item.Id" class="text-decoration-none text-dark">@item.Title</a></h3>
+                        <p class="text-muted property-description">@item.Description</p>
+                        <div class="property-meta mb-3">
+                            <span>@item.City</span>
+                            <span>@item.Area.ToString("0.##") m²</span>
+                        </div>
+                        <div class="mt-auto d-flex justify-content-between align-items-center gap-2">
+                            <strong class="property-price">@item.Price.ToString("N2") €</strong>
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-primary btn-sm">Detalji</a>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        }
+    </div>
+}
